@@ -1,4 +1,4 @@
-// Susejing Gallery v0.2.2
+// Susejing Gallery v0.2.4
 // Multi-source image gallery for Kino (Safe + 18+)
 
 const SOURCES = {
@@ -204,6 +204,13 @@ export async function screen({ state, lang }) {
     var tags = decodeEntities(p.tags || "");
     var fullUrl = p.file || p.sample || p.preview || "";
     var viewUrl = p.file || p.sample || p.preview || "";
+    var showTags = state.showTags === true;
+    var parts = tags ? tags.split(/\s+/) : [];
+    var tagPreview = tags
+      ? parts.slice(0, 8).join(" ") + (parts.length > 8 ? " …" : "")
+      : isEs
+        ? "(sin tags)"
+        : "(no tags)";
     return {
       type: "Scaffold",
       appBar: {
@@ -223,25 +230,19 @@ export async function screen({ state, lang }) {
         children: [
           {
             type: "Column",
-            gap: 8,
+            gap: 0,
             children: [
               {
                 type: "Image",
                 url: viewUrl,
                 aspect: "auto",
-                alt: tags.slice(0, 80) || "image",
+                alt: tagPreview.slice(0, 80) || "image",
               },
               {
                 type: "Column",
                 padding: 12,
                 gap: 10,
                 children: [
-                  {
-                    type: "Text",
-                    text: tags || (isEs ? "(sin tags)" : "(no tags)"),
-                    style: "caption",
-                    color: "muted",
-                  },
                   {
                     type: "Row",
                     wrap: true,
@@ -268,33 +269,17 @@ export async function screen({ state, lang }) {
                         variant: "secondary",
                         icon: "download",
                         labelText: isEs ? "Descargar" : "Download",
-                        onPressed: fullUrl
-                          ? {
-                              go: {
-                                url: {
-                                  href: fullUrl,
-                                  title: isEs ? "Descargar imagen" : "Download image",
-                                },
-                              },
-                            }
-                          : "openOriginal",
+                        onPressed: "downloadImage",
                         arg: fullUrl,
                       },
-                    ],
-                  },
-                  {
-                    type: "Row",
-                    wrap: true,
-                    gap: 8,
-                    children: [
                       {
                         type: "Button",
                         variant: "secondary",
                         icon: "heart",
                         labelText: fav
                           ? isEs
-                            ? "Quitar favorito"
-                            : "Unfavorite"
+                            ? "Quitar"
+                            : "Unfav"
                           : isEs
                             ? "Favorito"
                             : "Favorite",
@@ -305,18 +290,43 @@ export async function screen({ state, lang }) {
                         type: "Button",
                         variant: "secondary",
                         icon: "copy",
-                        labelText: isEs ? "Copiar tags" : "Copy tags",
+                        labelText: isEs ? "Tags" : "Tags",
                         onPressed: "copyTags",
                       },
-                      {
-                        type: "Button",
-                        variant: "secondary",
-                        icon: "star",
-                        labelText: isEs ? "Usar como tema" : "Use as theme",
-                        onPressed: "useAsTheme",
-                        arg: fullUrl,
-                      },
                     ],
+                  },
+                  {
+                    type: "Button",
+                    variant: "text",
+                    labelText: showTags
+                      ? isEs
+                        ? "Ocultar tags"
+                        : "Hide tags"
+                      : isEs
+                        ? "Ver tags"
+                        : "Show tags",
+                    onPressed: "toggleTags",
+                  },
+                  {
+                    type: "Text",
+                    text: showTags
+                      ? tags || (isEs ? "(sin tags)" : "(no tags)")
+                      : tagPreview,
+                    style: "caption",
+                    color: "muted",
+                  },
+                  {
+                    type: "Button",
+                    variant: "text",
+                    icon: "star",
+                    labelText: isEs
+                      ? "Temas de marca (no aplica esta imagen)"
+                      : "Brand themes (cannot apply this image)",
+                    onPressed: {
+                      go: {
+                        plugin: { repo: "Susejing/Susejing-Themes" },
+                      },
+                    },
                   },
                 ],
               },
@@ -346,6 +356,7 @@ export async function screen({ state, lang }) {
       { type: "TextField", key: "search", labelText: isEs ? "Buscar tags..." : "Search tags...", value: query, onSubmitted: "search" },
       { type: "SingleChildScrollView", direction: "horizontal", children: [{ type: "Row", gap: 8, children: sourceButtons }] },
       { type: "Text", text: isEs ? "Fuente: " + source.name + (query ? " · " + query : "") : "Source: " + source.name + (query ? " · " + query : ""), style: "caption", color: "muted" },
+      { type: "Button", variant: "text", labelText: isEs ? "Temas de marca Susejing" : "Susejing brand themes", onPressed: { go: { plugin: { repo: "Susejing/Susejing-Themes" } } } },
     ] : [
       { type: "Text", text: isEs ? "Imagenes guardadas en este aparato" : "Images saved on this device", style: "caption", color: "muted" },
     ]),
@@ -494,10 +505,30 @@ export async function screenEvent({ name, arg, value, state, lang }) {
         || (state.favorites || []).find(function (p) { return p.id === id; });
     }
     if (!post) return null;
-    return { state: Object.assign({}, state, { view: "detail", detailPost: post }) };
+    return { state: Object.assign({}, state, { view: "detail", detailPost: post, showTags: false }) };
   }
   if (name === "closeDetail") {
-    return { state: Object.assign({}, state, { view: null, detailPost: null }) };
+    return { state: Object.assign({}, state, { view: null, detailPost: null, showTags: false }) };
+  }
+  if (name === "toggleTags") {
+    return { state: Object.assign({}, state, { showTags: state.showTags !== true }) };
+  }
+  if (name === "downloadImage") {
+    var dl = String(arg || "");
+    if (!dl || dl.indexOf("https://") !== 0) {
+      return { toast: isEs ? "No hay enlace de descarga" : "No download link" };
+    }
+    return {
+      toast: isEs
+        ? "Abriendo original. Mantén pulsada la imagen y elige Guardar."
+        : "Opening original. Long-press the image and choose Save.",
+      go: {
+        url: {
+          href: dl,
+          title: isEs ? "Descargar imagen" : "Download image",
+        },
+      },
+    };
   }
   if (name === "openOriginal") {
     var url = String(arg || "");
