@@ -33,13 +33,13 @@ function sourceOf(state) {
 function decodeEntities(s) {
   if (!s) return "";
   return String(s)
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
+    .replace(/&/g, "&")
+    .replace(/</g, "<")
+    .replace(/>/g, ">")
+    .replace(/"/g, '"')
     .replace(/&#039;/g, "'")
     .replace(/&#39;/g, "'")
-    .replace(/&apos;/g, "'");
+    .replace(/'/g, "'");
 }
 
 function buildUrl(sourceId, tags, page) {
@@ -100,7 +100,8 @@ function normalizePosts(sourceId, data) {
   }
   if (sourceId === "wallhaven_sfw" && data && Array.isArray(data.data)) {
     return data.data.map(function (p) {
-      return        id: String(p.id),
+      return {
+        id: String(p.id),
         preview: (p.thumbs && (p.thumbs.small || p.thumbs.original)) || p.path,
         sample: (p.thumbs && p.thumbs.large) || p.path,
         file: p.path,
