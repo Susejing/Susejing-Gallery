@@ -1,4 +1,4 @@
-// Susejing Gallery v0.2.1
+// Susejing Gallery v0.2.2
 // Multi-source image gallery for Kino (Safe + 18+)
 
 const SOURCES = {
@@ -202,6 +202,8 @@ export async function screen({ state, lang }) {
     var p = state.detailPost;
     var fav = isFav(favs, p);
     var tags = decodeEntities(p.tags || "");
+    var fullUrl = p.file || p.sample || p.preview || "";
+    var viewUrl = p.file || p.sample || p.preview || "";
     return {
       type: "Scaffold",
       appBar: {
@@ -218,30 +220,109 @@ export async function screen({ state, lang }) {
       },
       body: {
         type: "SingleChildScrollView",
-        children: [{
-          type: "Column",
-          padding: 12,
-          gap: 12,
-          children: [
-            { type: "Image", url: p.sample || p.file || p.preview, aspect: "auto", alt: tags.slice(0, 80) || "image" },
-            { type: "Text", text: tags || (isEs ? "(sin tags)" : "(no tags)"), style: "caption", color: "muted" },
-            {
-              type: "Row", wrap: true, gap: 8,
-              children: [
-                { type: "ElevatedButton", icon: "open_in_new", labelText: isEs ? "Abrir original" : "Open original", onPressed: "openOriginal", arg: p.file || p.sample || p.preview },
-                { type: "Button", variant: "secondary", icon: "heart", labelText: fav ? (isEs ? "Quitar favorito" : "Unfavorite") : (isEs ? "Favorito" : "Favorite"), onPressed: "toggleFav", arg: p.id },
-              ],
-            },
-            {
-              type: "Row", wrap: true, gap: 8,
-              children: [
-                { type: "Button", variant: "secondary", icon: "copy", labelText: isEs ? "Copiar tags" : "Copy tags", onPressed: "copyTags" },
-                { type: "Button", variant: "secondary", icon: "star", labelText: isEs ? "Usar como tema" : "Use as theme", onPressed: "useAsTheme", arg: p.file || p.sample || p.preview },
-              ],
-            },
-            { type: "Text", text: isEs ? "Nota: Kino no permite aplicar imagenes de internet como tema. Este boton abre el original." : "Note: Kino cannot apply online images as a theme. This button opens the original.", style: "caption", color: "muted" },
-          ],
-        }],
+        children: [
+          {
+            type: "Column",
+            gap: 8,
+            children: [
+              {
+                type: "Image",
+                url: viewUrl,
+                aspect: "auto",
+                alt: tags.slice(0, 80) || "image",
+              },
+              {
+                type: "Column",
+                padding: 12,
+                gap: 10,
+                children: [
+                  {
+                    type: "Text",
+                    text: tags || (isEs ? "(sin tags)" : "(no tags)"),
+                    style: "caption",
+                    color: "muted",
+                  },
+                  {
+                    type: "Row",
+                    wrap: true,
+                    gap: 8,
+                    children: [
+                      {
+                        type: "ElevatedButton",
+                        icon: "open_in_new",
+                        labelText: isEs ? "Abrir original" : "Open original",
+                        onPressed: fullUrl
+                          ? {
+                              go: {
+                                url: {
+                                  href: fullUrl,
+                                  title: isEs ? "Imagen original" : "Original image",
+                                },
+                              },
+                            }
+                          : "openOriginal",
+                        arg: fullUrl,
+                      },
+                      {
+                        type: "Button",
+                        variant: "secondary",
+                        icon: "download",
+                        labelText: isEs ? "Descargar" : "Download",
+                        onPressed: fullUrl
+                          ? {
+                              go: {
+                                url: {
+                                  href: fullUrl,
+                                  title: isEs ? "Descargar imagen" : "Download image",
+                                },
+                              },
+                            }
+                          : "openOriginal",
+                        arg: fullUrl,
+                      },
+                    ],
+                  },
+                  {
+                    type: "Row",
+                    wrap: true,
+                    gap: 8,
+                    children: [
+                      {
+                        type: "Button",
+                        variant: "secondary",
+                        icon: "heart",
+                        labelText: fav
+                          ? isEs
+                            ? "Quitar favorito"
+                            : "Unfavorite"
+                          : isEs
+                            ? "Favorito"
+                            : "Favorite",
+                        onPressed: "toggleFav",
+                        arg: p.id,
+                      },
+                      {
+                        type: "Button",
+                        variant: "secondary",
+                        icon: "copy",
+                        labelText: isEs ? "Copiar tags" : "Copy tags",
+                        onPressed: "copyTags",
+                      },
+                      {
+                        type: "Button",
+                        variant: "secondary",
+                        icon: "star",
+                        labelText: isEs ? "Usar como tema" : "Use as theme",
+                        onPressed: "useAsTheme",
+                        arg: fullUrl,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       },
     };
   }
@@ -300,7 +381,7 @@ export async function screen({ state, lang }) {
         span: { compact: 6, medium: 4, expanded: 3 },
         onTap: "openImage",
         arg: (item.sourceId || source.id) + ":" + item.id,
-        children: [{ type: "Image", url: item.preview || item.sample, aspect: "1:1", alt: decodeEntities(item.tags || "image").slice(0, 60) }],
+        children: [{ type: "Image", url: item.sample || item.preview, aspect: "1:1", alt: decodeEntities(item.tags || "image").slice(0, 60) }],
       };
     });
     var bottom = [];
@@ -420,19 +501,45 @@ export async function screenEvent({ name, arg, value, state, lang }) {
   }
   if (name === "openOriginal") {
     var url = String(arg || "");
-    if (url) return { go: { url: url } };
-    return null;
+    if (!url || url.indexOf("https://") !== 0) {
+      return { toast: isEs ? "No hay enlace" : "No link" };
+    }
+    return {
+      go: {
+        url: {
+          href: url,
+          title: isEs ? "Imagen original" : "Original image",
+        },
+      },
+    };
   }
   if (name === "copyTags") {
     var tags2 = decodeEntities((state.detailPost && state.detailPost.tags) || "");
     if (!tags2) return { toast: isEs ? "No hay tags" : "No tags" };
-    return { toast: isEs ? "Tags listos (manten pulsado el texto)" : "Tags ready (long-press the text)" };
+    return {
+      go: {
+        copy: {
+          text: tags2.slice(0, 500),
+          label: isEs ? "Tags" : "Tags",
+        },
+      },
+    };
   }
   if (name === "useAsTheme") {
     var url2 = String(arg || "");
     return {
-      toast: isEs ? "Kino no aplica imagenes online como tema. Se abre el original." : "Kino cannot apply online images as a theme. Opening original.",
-      go: url2 ? { url: url2 } : undefined,
+      toast: isEs
+        ? "Kino no aplica imagenes online como tema. Se abre el original."
+        : "Kino cannot apply online images as a theme. Opening original.",
+      go:
+        url2 && url2.indexOf("https://") === 0
+          ? {
+              url: {
+                href: url2,
+                title: isEs ? "Imagen original" : "Original image",
+              },
+            }
+          : undefined,
     };
   }
   if (name === "toggleFav") {
