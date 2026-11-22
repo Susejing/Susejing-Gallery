@@ -1,11 +1,11 @@
 {
   "id": "susejing-gallery",
   "name": "Susejing Gallery",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "apiVersion": 14,
   "entry": "plugin.js",
-  "description": "Galería multi-fuente de imágenes anime, galgames, videojuegos y wallpapers. Secciones Safe y 18+ con cambio de fuente al estilo booru.",
-  "descriptionEn": "Multi-source image gallery for anime, galgames, games and wallpapers. Safe and 18+ sections with booru-style source switching.",
+  "description": "Galería multi-fuente anime/galgames/wallpapers para Kino. Safe y 18+, favoritos, paginación y detalle.",
+  "descriptionEn": "Multi-source anime/galgame/wallpaper gallery for Kino. Safe & 18+, favorites, paging and detail view.",
   "hosts": [
     "safebooru.org",
     "konachan.net",
