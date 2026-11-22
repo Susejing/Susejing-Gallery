@@ -1,7 +1,7 @@
 {
   "id": "susejing-gallery",
   "name": "Susejing Gallery",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "apiVersion": 14,
   "entry": "plugin.js",
   "description": "Galería multi-fuente de imágenes anime, galgames, videojuegos y wallpapers. Secciones Safe y 18+ con cambio de fuente al estilo booru.",
