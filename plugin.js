@@ -1,4 +1,4 @@
-// Susejing Gallery v0.2.5
+// Susejing Gallery v0.2.6
 // Multi-source image gallery for Kino (Safe + 18+)
 
 const SOURCES = {
@@ -293,6 +293,7 @@ export async function screen({ state, lang }) {
     });
     return {
       type: "Scaffold",
+      onBack: "closeDetail",
       appBar: {
         type: "AppBar",
         mergeWithKinoBar: true,
@@ -303,6 +304,7 @@ export async function screen({ state, lang }) {
           type: "IconButton",
           icon: "arrow_back",
           labelText: isEs ? "Volver" : "Back",
+          labelTextEn: "Back",
           onPressed: "closeDetail",
         },
       },
@@ -313,12 +315,12 @@ export async function screen({ state, lang }) {
             type: "Image",
             url: viewUrl,
             fit: "contain",
-            aspect: "auto",
+            flex: 1,
             alt: "image",
           },
           {
             type: "Column",
-            padding: 12,
+            padding: 10,
             gap: 8,
             children: bottomChildren,
           },
@@ -406,7 +408,7 @@ export async function screen({ state, lang }) {
     type: "Scaffold",
     appBar: {
       type: "AppBar", mergeWithKinoBar: true, dense: true, divider: false, title: "Susejing Gallery",
-      leading: { type: "IconButton", icon: "close", labelText: isEs ? "Cerrar" : "Close", onPressed: { go: { close: true } } },
+      leading: { type: "IconButton", icon: "close", labelText: isEs ? "Cerrar" : "Close", labelTextEn: "Close", onPressed: { close: true } },
       actions: [{ type: "IconButton", icon: "refresh", labelText: isEs ? "Recargar" : "Reload", onPressed: "reload" }],
       bottom: { type: "TabBar", key: "sectionTabs", value: section, onChanged: "changeSection", tabs: [
         { value: "safe", label: "Safe", labelEn: "Safe" },
