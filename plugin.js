@@ -1,4 +1,4 @@
-// Susejing Gallery v0.3.0
+// Susejing Gallery v0.3.1
 // Multi-source image gallery for Kino (Safe + 18+)
 
 const SOURCES = {
@@ -205,6 +205,7 @@ export async function screen({ state, lang }) {
     var fullUrl = p.file || p.sample || p.preview || "";
     var viewUrl = p.file || p.sample || p.preview || "";
     var showTags = state.showTags === true;
+    var stretch = state.stretch === true;
     var actionChildren = [
       {
         type: "ElevatedButton",
@@ -263,6 +264,19 @@ export async function screen({ state, lang }) {
             : "Show tags",
         onPressed: "toggleTags",
       },
+      {
+        type: "Button",
+        variant: stretch ? "primary" : "secondary",
+        icon: "fullscreen",
+        labelText: stretch
+          ? isEs
+            ? "Normal"
+            : "Normal"
+          : isEs
+            ? "Estirar pantalla"
+            : "Stretch screen",
+        onPressed: "toggleStretch",
+      },
     ];
     var bottomChildren = [
       {
@@ -291,8 +305,6 @@ export async function screen({ state, lang }) {
         },
       },
     });
-    // Mismo patrón que MangaTrack (lector en tira):
-    // SingleChildScrollView flex:1 + zoom + Image fit:"width"
     return {
       type: "Scaffold",
       onBack: "closeDetail",
@@ -313,20 +325,28 @@ export async function screen({ state, lang }) {
       body: {
         type: "Column",
         children: [
-          {
-            type: "SingleChildScrollView",
-            key: "photoView",
-            flex: 1,
-            zoom: true,
-            children: [
-              {
+          stretch
+            ? {
                 type: "Image",
                 url: viewUrl,
-                fit: "width",
+                fit: "cover",
+                flex: 1,
                 alt: "image",
+              }
+            : {
+                type: "SingleChildScrollView",
+                key: "photoView",
+                flex: 1,
+                zoom: true,
+                children: [
+                  {
+                    type: "Image",
+                    url: viewUrl,
+                    fit: "width",
+                    alt: "image",
+                  },
+                ],
               },
-            ],
-          },
           {
             type: "Column",
             padding: 12,
@@ -507,18 +527,21 @@ export async function screenEvent({ name, arg, value, state, lang }) {
     }
     if (!post) return null;
     return {
-      state: Object.assign({}, state, { view: "detail", detailPost: post, showTags: false }),
+      state: Object.assign({}, state, { view: "detail", detailPost: post, showTags: false, stretch: false }),
       ui: [{ fullscreen: true }],
     };
   }
   if (name === "closeDetail") {
     return {
-      state: Object.assign({}, state, { view: null, detailPost: null, showTags: false }),
+      state: Object.assign({}, state, { view: null, detailPost: null, showTags: false, stretch: false }),
       ui: [{ fullscreen: false }],
     };
   }
   if (name === "toggleTags") {
     return { state: Object.assign({}, state, { showTags: state.showTags !== true }) };
+  }
+  if (name === "toggleStretch") {
+    return { state: Object.assign({}, state, { stretch: state.stretch !== true }) };
   }
   if (name === "downloadImage") {
     var dl = String(arg || "");
