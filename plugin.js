@@ -1,4 +1,4 @@
-// Susejing Gallery v0.2.4
+// Susejing Gallery v0.2.5
 // Multi-source image gallery for Kino (Safe + 18+)
 
 const SOURCES = {
@@ -205,18 +205,99 @@ export async function screen({ state, lang }) {
     var fullUrl = p.file || p.sample || p.preview || "";
     var viewUrl = p.file || p.sample || p.preview || "";
     var showTags = state.showTags === true;
-    var parts = tags ? tags.split(/\s+/) : [];
-    var tagPreview = tags
-      ? parts.slice(0, 8).join(" ") + (parts.length > 8 ? " …" : "")
-      : isEs
-        ? "(sin tags)"
-        : "(no tags)";
+    var actionChildren = [
+      {
+        type: "ElevatedButton",
+        icon: "open_in_new",
+        labelText: isEs ? "Abrir original" : "Open original",
+        onPressed: fullUrl
+          ? {
+              go: {
+                url: {
+                  href: fullUrl,
+                  title: isEs ? "Imagen original" : "Original image",
+                },
+              },
+            }
+          : "openOriginal",
+        arg: fullUrl,
+      },
+      {
+        type: "Button",
+        variant: "secondary",
+        icon: "download",
+        labelText: isEs ? "Descargar" : "Download",
+        onPressed: "downloadImage",
+        arg: fullUrl,
+      },
+      {
+        type: "Button",
+        variant: "secondary",
+        icon: "heart",
+        labelText: fav
+          ? isEs
+            ? "Quitar"
+            : "Unfav"
+          : isEs
+            ? "Favorito"
+            : "Favorite",
+        onPressed: "toggleFav",
+        arg: p.id,
+      },
+      {
+        type: "Button",
+        variant: "secondary",
+        icon: "copy",
+        labelText: isEs ? "Tags" : "Tags",
+        onPressed: "copyTags",
+      },
+      {
+        type: "Button",
+        variant: "text",
+        labelText: showTags
+          ? isEs
+            ? "Ocultar tags"
+            : "Hide tags"
+          : isEs
+            ? "Ver tags"
+            : "Show tags",
+        onPressed: "toggleTags",
+      },
+    ];
+    var bottomChildren = [
+      {
+        type: "Row",
+        wrap: true,
+        gap: 8,
+        children: actionChildren,
+      },
+    ];
+    if (showTags) {
+      bottomChildren.push({
+        type: "Text",
+        text: tags || (isEs ? "(sin tags)" : "(no tags)"),
+        style: "caption",
+        color: "muted",
+      });
+    }
+    bottomChildren.push({
+      type: "Button",
+      variant: "text",
+      icon: "star",
+      labelText: isEs ? "Temas de marca Susejing" : "Susejing brand themes",
+      onPressed: {
+        go: {
+          plugin: { repo: "Susejing/Susejing-Themes" },
+        },
+      },
+    });
     return {
       type: "Scaffold",
       appBar: {
         type: "AppBar",
         mergeWithKinoBar: true,
         dense: true,
+        divider: false,
         title: source.name,
         leading: {
           type: "IconButton",
@@ -226,111 +307,20 @@ export async function screen({ state, lang }) {
         },
       },
       body: {
-        type: "SingleChildScrollView",
+        type: "Column",
         children: [
           {
+            type: "Image",
+            url: viewUrl,
+            fit: "contain",
+            aspect: "auto",
+            alt: "image",
+          },
+          {
             type: "Column",
-            gap: 0,
-            children: [
-              {
-                type: "Image",
-                url: viewUrl,
-                aspect: "auto",
-                alt: tagPreview.slice(0, 80) || "image",
-              },
-              {
-                type: "Column",
-                padding: 12,
-                gap: 10,
-                children: [
-                  {
-                    type: "Row",
-                    wrap: true,
-                    gap: 8,
-                    children: [
-                      {
-                        type: "ElevatedButton",
-                        icon: "open_in_new",
-                        labelText: isEs ? "Abrir original" : "Open original",
-                        onPressed: fullUrl
-                          ? {
-                              go: {
-                                url: {
-                                  href: fullUrl,
-                                  title: isEs ? "Imagen original" : "Original image",
-                                },
-                              },
-                            }
-                          : "openOriginal",
-                        arg: fullUrl,
-                      },
-                      {
-                        type: "Button",
-                        variant: "secondary",
-                        icon: "download",
-                        labelText: isEs ? "Descargar" : "Download",
-                        onPressed: "downloadImage",
-                        arg: fullUrl,
-                      },
-                      {
-                        type: "Button",
-                        variant: "secondary",
-                        icon: "heart",
-                        labelText: fav
-                          ? isEs
-                            ? "Quitar"
-                            : "Unfav"
-                          : isEs
-                            ? "Favorito"
-                            : "Favorite",
-                        onPressed: "toggleFav",
-                        arg: p.id,
-                      },
-                      {
-                        type: "Button",
-                        variant: "secondary",
-                        icon: "copy",
-                        labelText: isEs ? "Tags" : "Tags",
-                        onPressed: "copyTags",
-                      },
-                    ],
-                  },
-                  {
-                    type: "Button",
-                    variant: "text",
-                    labelText: showTags
-                      ? isEs
-                        ? "Ocultar tags"
-                        : "Hide tags"
-                      : isEs
-                        ? "Ver tags"
-                        : "Show tags",
-                    onPressed: "toggleTags",
-                  },
-                  {
-                    type: "Text",
-                    text: showTags
-                      ? tags || (isEs ? "(sin tags)" : "(no tags)")
-                      : tagPreview,
-                    style: "caption",
-                    color: "muted",
-                  },
-                  {
-                    type: "Button",
-                    variant: "text",
-                    icon: "star",
-                    labelText: isEs
-                      ? "Temas de marca (no aplica esta imagen)"
-                      : "Brand themes (cannot apply this image)",
-                    onPressed: {
-                      go: {
-                        plugin: { repo: "Susejing/Susejing-Themes" },
-                      },
-                    },
-                  },
-                ],
-              },
-            ],
+            padding: 12,
+            gap: 8,
+            children: bottomChildren,
           },
         ],
       },
@@ -415,8 +405,8 @@ export async function screen({ state, lang }) {
   return {
     type: "Scaffold",
     appBar: {
-      type: "AppBar", mergeWithKinoBar: true, dense: true, title: "Susejing Gallery",
-      leading: { type: "IconButton", icon: "close", labelText: isEs ? "Cerrar" : "Close", onPressed: { close: true } },
+      type: "AppBar", mergeWithKinoBar: true, dense: true, divider: false, title: "Susejing Gallery",
+      leading: { type: "IconButton", icon: "close", labelText: isEs ? "Cerrar" : "Close", onPressed: { go: { close: true } } },
       actions: [{ type: "IconButton", icon: "refresh", labelText: isEs ? "Recargar" : "Reload", onPressed: "reload" }],
       bottom: { type: "TabBar", key: "sectionTabs", value: section, onChanged: "changeSection", tabs: [
         { value: "safe", label: "Safe", labelEn: "Safe" },
@@ -505,10 +495,16 @@ export async function screenEvent({ name, arg, value, state, lang }) {
         || (state.favorites || []).find(function (p) { return p.id === id; });
     }
     if (!post) return null;
-    return { state: Object.assign({}, state, { view: "detail", detailPost: post, showTags: false }) };
+    return {
+      state: Object.assign({}, state, { view: "detail", detailPost: post, showTags: false }),
+      ui: [{ fullscreen: true }],
+    };
   }
   if (name === "closeDetail") {
-    return { state: Object.assign({}, state, { view: null, detailPost: null, showTags: false }) };
+    return {
+      state: Object.assign({}, state, { view: null, detailPost: null, showTags: false }),
+      ui: [{ fullscreen: false }],
+    };
   }
   if (name === "toggleTags") {
     return { state: Object.assign({}, state, { showTags: state.showTags !== true }) };
