@@ -1,4 +1,4 @@
-// Susejing Gallery v0.2.9
+// Susejing Gallery v0.3.0
 // Multi-source image gallery for Kino (Safe + 18+)
 
 const SOURCES = {
@@ -145,7 +145,7 @@ async function fetchPosts(state) {
   try {
     var res = await kino.fetch(url, {
       headers: {
-        "User-Agent": "SusejingGallery/0.2 (Kino plugin)",
+        "User-Agent": "SusejingGallery/0.3 (Kino plugin)",
         Accept: "application/json",
       },
     });
@@ -291,6 +291,8 @@ export async function screen({ state, lang }) {
         },
       },
     });
+    // Mismo patrón que MangaTrack (lector en tira):
+    // SingleChildScrollView flex:1 + zoom + Image fit:"width"
     return {
       type: "Scaffold",
       onBack: "closeDetail",
@@ -312,11 +314,18 @@ export async function screen({ state, lang }) {
         type: "Column",
         children: [
           {
-            type: "Image",
-            url: viewUrl,
-            fit: "cover",
+            type: "SingleChildScrollView",
+            key: "photoView",
             flex: 1,
-            alt: "image",
+            zoom: true,
+            children: [
+              {
+                type: "Image",
+                url: viewUrl,
+                fit: "width",
+                alt: "image",
+              },
+            ],
           },
           {
             type: "Column",
