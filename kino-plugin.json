@@ -1,8 +1,8 @@
 {
   "id": "susejing-gallery",
   "name": "Susejing Gallery",
-  "version": "0.2.5",
-  "apiVersion": 14,
+  "version": "0.2.6",
+  "apiVersion": 19,
   "entry": "plugin.js",
   "description": "Galería multi-fuente anime/galgames/wallpapers para Kino. Safe y 18+, favoritos, paginación y detalle.",
   "descriptionEn": "Multi-source anime/galgame/wallpaper gallery for Kino. Safe & 18+, favorites, paging and detail view.",
