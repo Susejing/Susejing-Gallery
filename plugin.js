@@ -1,4 +1,4 @@
-// Susejing Gallery v0.2.7
+// Susejing Gallery v0.2.8
 // Multi-source image gallery for Kino (Safe + 18+)
 
 const SOURCES = {
@@ -315,20 +315,15 @@ export async function screen({ state, lang }) {
             type: "Image",
             url: viewUrl,
             fit: "contain",
+            fill: true,
             alt: "image",
           },
           {
             type: "Column",
-            mainAxisAlignment: "end",
-            crossAxisAlignment: "stretch",
-            children: [
-              {
-                type: "Column",
-                padding: 12,
-                gap: 8,
-                children: bottomChildren,
-              },
-            ],
+            positioned: { left: 0, right: 0, bottom: 0 },
+            padding: 12,
+            gap: 8,
+            children: bottomChildren,
           },
         ],
       },
