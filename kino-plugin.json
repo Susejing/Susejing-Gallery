@@ -1,0 +1,55 @@
+{
+  "id": "susejing-gallery",
+  "name": "Susejing Gallery",
+  "version": "0.6.0",
+  "apiVersion": 19,
+  "entry": "plugin.js",
+  "description": "Galería multi-fuente anime/galgames/wallpapers. Filtros vertical/1080p, modo móvil, wallpaper del día, colecciones, 18+ con PIN y pestaña A futuro.",
+  "descriptionEn": "Multi-source anime/galgame/wallpaper gallery. Portrait/1080p filters, phone mode, wallpaper of the day, collections, 18+ PIN and Coming soon tab.",
+  "hosts": [
+    "safebooru.org",
+    "konachan.net",
+    "konachan.com",
+    "yande.re",
+    "danbooru.donmai.us",
+    "gelbooru.com",
+    "www.zerochan.net",
+    "wallhaven.cc",
+    "rule34.xxx",
+    "anime-pictures.net",
+    "api.anime-pictures.net"
+  ],
+  "capabilities": [
+    "screen"
+  ],
+  "screen": {
+    "label": "Susejing Gallery",
+    "labelEn": "Susejing Gallery",
+    "icon": "image",
+    "menuOpens": "screen",
+    "opensFrom": [
+      "menu"
+    ]
+  },
+  "categories": [
+    "images",
+    "anime",
+    "wallpaper",
+    "utilities"
+  ],
+  "recommends": [
+    "Susejing/Susejing-Themes"
+  ],
+  "settings": [
+    {
+      "key": "allowNsfw",
+      "label": "Mostrar sección 18+",
+      "labelEn": "Show 18+ section",
+      "type": "toggle",
+      "default": false,
+      "unlockWith": "adultCode",
+      "description": "Pide el código parental de Kino (Ajustes ▸ Control parental) al activarlo. Sin esto la pestaña 18+ permanece bloqueada.",
+      "descriptionEn": "Asks for Kino's parental code (Settings ▸ Parental controls) when turned on. Without it the 18+ tab stays locked."
+    }
+  ]
+}
