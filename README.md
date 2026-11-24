@@ -1,33 +1,41 @@
 # Susejing Gallery
 
-Galería multi-fuente de imágenes para **Kino** (Safe / 18+).
+Galería multi-fuente de imágenes anime / galgames / wallpapers para **Kino**.
 
-## Instalación
+## Fuentes
 
-**Ajustes → Plugins → +**
+**Safe:** Safebooru · Konachan (safe) · Wallhaven  
+**18+:** Yande.re · Konachan (r18) · Danbooru · Gelbooru
+
+## Funciones (v0.5.0)
+
+- Pestañas Safe / 18+
+- Búsqueda por tags + chips populares + tags recientes
+- Favoritos e historial (con filtro de búsqueda)
+- Colecciones personalizadas
+- Candidatos a tema («Listo para tema»)
+- Vista detalle a pantalla completa, zoom, estirar pantalla, resolución
+- Abrir original · Descargar · Compartir · Copiar URL · Tags
+- Swipe izquierda/derecha entre imágenes de la lista actual
+- Enlace a **Susejing Themes**
+
+## Instalar en Kino
 
 ```
 Susejing/Susejing-Gallery
 ```
 
-## Funciones (v0.2.3)
-
-- Pestañas **Safe** y **18+**
-- Fuentes: Safebooru, Konachan, Wallhaven · Yande.re, Danbooru, Gelbooru
-- Búsqueda por tags, favoritos, paginación / cargar más
-- Detalle: imagen grande, abrir original, descargar, copiar tags, favorito
-- Pantalla completa en el detalle
-- Enlace a **Susejing Themes** (temas de marca)
-
-## Temas de marca
+o la URL del manifiesto:
 
 ```
-Susejing/Susejing-Themes
+https://raw.githubusercontent.com/Susejing/Susejing-Gallery/main/kino-plugin.json
 ```
 
-Cuatro temas (Noche, Sakura, Cian, Ascua). Kino no permite aplicar una imagen cualquiera de internet como tema de la app.
+## Temas
 
-## Notas
+Los fondos de imagen reales de toda la app requieren `appThemes` con assets empaquetados (apiVersion 26).  
+Usa el botón **Listo para tema** para guardar la URL como candidata y el plugin hermano [Susejing Themes](https://github.com/Susejing/Susejing-Themes).
 
-- Algunas miniaturas de Wallhaven pueden fallar.
-- Favoritos en `kino.storage` (por aparato).
+## Requisitos
+
+Kino con soporte de pantallas (`apiVersion` 19 / Kino 0.9.81+ recomendado).

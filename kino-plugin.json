@@ -1,11 +1,11 @@
 {
   "id": "susejing-gallery",
   "name": "Susejing Gallery",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "apiVersion": 19,
   "entry": "plugin.js",
-  "description": "Galería multi-fuente anime/galgames/wallpapers. Safe y 18+, favoritos, historial, aleatorio, compartir y listo para temas.",
-  "descriptionEn": "Multi-source anime/galgame/wallpaper gallery. Safe & 18+, favorites, history, random, share and theme-ready.",
+  "description": "Galería multi-fuente anime/galgames/wallpapers. Safe y 18+, favoritos, historial, colecciones, candidatos a tema, aleatorio, compartir y listo para temas Susejing.",
+  "descriptionEn": "Multi-source anime/galgame/wallpaper gallery. Safe & 18+, favorites, history, collections, theme candidates, random, share and Susejing theme-ready.",
   "hosts": [
     "safebooru.org",
     "konachan.net",
@@ -24,5 +24,6 @@
     "menuOpens": "screen",
     "opensFrom": ["menu"]
   },
-  "categories": ["images", "anime", "wallpaper", "utilities"]
+  "categories": ["images", "anime", "wallpaper", "utilities"],
+  "recommends": ["Susejing/Susejing-Themes"]
 }
