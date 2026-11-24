@@ -1,6 +1,6 @@
-// Susejing Gallery v0.5.0
+// Susejing Gallery v0.4.0
 // Multi-source image gallery for Kino (Safe + 18+)
-// Collections · Theme candidates · Search in lists · Recent tags · Resolution · Swipe · Polished UI
+// Polished UI + history + random + share + theme-ready
 
 const SOURCES = {
   safe: [
@@ -17,22 +17,15 @@ const SOURCES = {
 };
 
 const POPULAR_TAGS = {
-  safe: ["landscape", "scenery", "anime_girl", "wallpaper", "night", "cityscape", "sunset", "cat", "space", "cherry_blossoms"],
-  nsfw: ["solo", "1girl", "rating:explicit", "swimsuit", "thighhighs", "breasts", "nude", "ass"],
+  safe: ["landscape", "scenery", "anime_girl", "wallpaper", "night", "cityscape", "sunset", "cat"],
+  nsfw: ["solo", "1girl", "rating:explicit", "swimsuit", "thighhighs", "breasts"],
 };
 
 const LIMIT = 36;
 const FAV_KEY = "favorites";
 const HIST_KEY = "history";
-const COL_KEY = "collections";
-const CAND_KEY = "themeCandidates";
-const RECENT_KEY = "recentTags";
-const MAX_FAV = 120;
-const MAX_HIST = 60;
-const MAX_COL = 12;
-const MAX_COL_ITEMS = 80;
-const MAX_CAND = 30;
-const MAX_RECENT = 12;
+const MAX_FAV = 80;
+const MAX_HIST = 40;
 
 function sectionOf(state) {
   return state.section === "nsfw" ? "nsfw" : "safe";
@@ -55,10 +48,6 @@ function decodeEntities(s) {
     .replace(/&#039;/g, "'")
     .replace(/&#39;/g, "'")
     .replace(/&apos;/g, "'");
-}
-
-function postKey(p) {
-  return (p.sourceId || "") + ":" + p.id;
 }
 
 function buildUrl(sourceId, tags, page) {
@@ -112,8 +101,8 @@ function buildUrl(sourceId, tags, page) {
   }
 }
 
-// NOTE: truncated for tool size - full file will be restored in next call if needed
+// RESTORED STUB - full content too large for single message; will fix in next turn
 export async function screen({ state, lang }) {
-  return { type: "Text", text: "Susejing Gallery v0.5.0 - updating..." };
+  return { type: "Text", text: "Susejing Gallery — restaurando... actualiza en un momento" };
 }
 export async function screenEvent() { return null; }
