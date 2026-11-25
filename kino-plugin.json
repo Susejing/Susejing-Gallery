@@ -1,0 +1,119 @@
+{
+  "id": "susejing-gallery",
+  "name": "Susejing Gallery",
+  "version": "0.6.5",
+  "apiVersion": 20,
+  "entry": "plugin.js",
+  "description": "Galería multi-fuente. Enviar a Themes, candidatas a tema, guía paso a paso y 18+ con PIN.",
+  "descriptionEn": "Multi-source gallery. Send to Themes, theme candidates, step-by-step guide and 18+ PIN.",
+  "hosts": [
+    "safebooru.org",
+    "konachan.net",
+    "konachan.com",
+    "yande.re",
+    "danbooru.donmai.us",
+    "gelbooru.com",
+    "www.zerochan.net",
+    "wallhaven.cc",
+    "rule34.xxx",
+    "anime-pictures.net",
+    "api.anime-pictures.net",
+    "api.rule34.xxx",
+    "www.pixiv.net",
+    "accounts.pixiv.net",
+    "app-api.pixiv.net"
+  ],
+  "capabilities": [
+    "screen"
+  ],
+  "screen": {
+    "label": "Susejing Gallery",
+    "labelEn": "Susejing Gallery",
+    "icon": "image",
+    "menuOpens": "screen",
+    "opensFrom": [
+      "menu"
+    ]
+  },
+  "categories": [
+    "images",
+    "anime",
+    "wallpaper",
+    "utilities"
+  ],
+  "recommends": [
+    "Susejing/Susejing-Themes"
+  ],
+  "provides": {
+    "themeCandidates": {
+      "summary": "Imagenes marcadas como candidatas a tema desde Susejing Gallery",
+      "calls": {
+        "list": {
+          "out": "CandidateList"
+        }
+      },
+      "types": {
+        "Candidate": {
+          "url": "string",
+          "at": "number?"
+        },
+        "CandidateList": {
+          "items": "Candidate[]"
+        }
+      }
+    }
+  },
+  "settings": [
+    {
+      "key": "allowNsfw",
+      "label": "Mostrar sección 18+",
+      "labelEn": "Show 18+ section",
+      "type": "toggle",
+      "default": false,
+      "unlockWith": "adultCode",
+      "description": "Pide el código parental de Kino (Ajustes ▸ Control parental) al activarlo. Sin esto la pestaña 18+ permanece bloqueada.",
+      "descriptionEn": "Asks for Kino's parental code (Settings ▸ Parental controls) when turned on. Without it the 18+ tab stays locked."
+    },
+    {
+      "key": "gelbooruUserId",
+      "label": "Gelbooru user_id",
+      "labelEn": "Gelbooru user_id",
+      "type": "text",
+      "description": "Cuenta Gelbooru ▸ Opciones ▸ API Access Credentials",
+      "descriptionEn": "Gelbooru account ▸ Options ▸ API Access Credentials"
+    },
+    {
+      "key": "gelbooruApiKey",
+      "label": "Gelbooru api_key",
+      "labelEn": "Gelbooru api_key",
+      "type": "password",
+      "description": "Obligatorio desde 2025 para la API de Gelbooru",
+      "descriptionEn": "Required since 2025 for Gelbooru API"
+    },
+    {
+      "key": "rule34UserId",
+      "label": "Rule34 user_id",
+      "labelEn": "Rule34 user_id",
+      "type": "text",
+      "description": "rule34.xxx ▸ Account options ▸ API Access Credentials",
+      "descriptionEn": "rule34.xxx ▸ Account options ▸ API Access Credentials"
+    },
+    {
+      "key": "rule34ApiKey",
+      "label": "Rule34 api_key",
+      "labelEn": "Rule34 api_key",
+      "type": "password",
+      "description": "Obligatorio para la API de Rule34",
+      "descriptionEn": "Required for Rule34 API"
+    },
+    {
+      "key": "pixivCookies",
+      "label": "Pixiv cookies",
+      "labelEn": "Pixiv cookies",
+      "type": "password",
+      "description": "Se llena sola al vincular Pixiv desde A futuro",
+      "descriptionEn": "Filled automatically when linking Pixiv from Coming soon"
+    }
+  ],
+  "visualBrowser": true
+}
